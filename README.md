@@ -2,7 +2,7 @@
 Sistema de gestión de tareas desarrollado en C# / .NET, con arquitectura en capas y cobertura de tests unitarios.
 
 📌 Descripción
-Aplicación de escritorio que permite crear, listar, actualizar y eliminar tareas. Cada tarea tiene un título, descripción, estado (pendiente / en progreso / completada) y fecha de vencimiento. El proyecto fue desarrollado como parte de la Tecnicatura en Desarrollo Web en la Universidad Nacional de La Matanza.
+Aplicación de escritorio que permite crear, listar, actualizar y eliminar tareas. Cada tarea tiene un título, descripción, estado (pendiente / en progreso / completada) y fecha de vencimiento. 
 
 🏗️ Arquitectura
 El proyecto sigue una arquitectura en capas que separa responsabilidades:
@@ -18,7 +18,7 @@ TableroDeTareas/
 
 Lenguaje: C#
 Framework: .NET
-Tests: MSTest / xUnit (ajustar según corresponda)
+Tests:  xUnit 
 IDE: Visual Studio
 Control de versiones: Git / GitHub
 

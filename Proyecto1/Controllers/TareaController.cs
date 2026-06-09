@@ -30,9 +30,10 @@ namespace Proyecto1.Controllers
                 _tareaServicio.AgregarTarea(tareaViewModel);
                 return RedirectToAction("Detalle", "Tablero", new { id = tareaViewModel.tableroId });
             }
-            catch
+            catch (Exception ex)
             {
-                return RedirectToAction("Detalle", "Tablero", new { id = tareaViewModel.tableroId });
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Error", "Error");
             }
         }
 
@@ -45,9 +46,10 @@ namespace Proyecto1.Controllers
                 _tareaServicio.CambiarEstadoTarea(tareaId);
                 return RedirectToAction("Detalle", "Tablero", new { id = tableroId });
             }
-            catch
+            catch (Exception ex)
             {
-                return RedirectToAction("Detalle", "Tablero", new { id = tableroId });
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Error", "Error");
             }
 
         }
@@ -62,9 +64,10 @@ namespace Proyecto1.Controllers
                 _tareaServicio.EditarTarea(tareaViewModel);
                 return RedirectToAction("Detalle", "Tablero", new { id = tareaViewModel.IdTablero });
             }
-            catch
+            catch (Exception ex)
             {
-                return RedirectToAction("Detalle", "Tablero", new { id = tareaViewModel.IdTablero });
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Error", "Error");
             }
         }
 
@@ -77,9 +80,10 @@ namespace Proyecto1.Controllers
                 _tareaServicio.EliminarTarea(tareaId);
                 return RedirectToAction("Detalle", "Tablero", new { id = tableroId });
             }
-            catch
+            catch (Exception ex)
             {
-                return RedirectToAction("Detalle", "Tablero", new { id = tableroId });
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Error", "Error");
             }
         }
 

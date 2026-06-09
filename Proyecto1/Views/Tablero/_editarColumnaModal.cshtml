@@ -1,0 +1,74 @@
+﻿<div id="modalColumna"
+     class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-auto overflow-hidden">
+
+        <form asp-action="Editar" asp-controller="Columna" method="post" class="flex flex-col">
+            
+            <input type="hidden" id="columnaId" name="Id" />
+            <input type="hidden" id="columnaTableroId" name="IdTablero" />
+
+            <div class="p-8 border-b">
+                <h2 class="text-2xl font-bold text-gray-800">
+                    Editar columna
+                </h2>
+            </div>
+
+            <div class="p-8 flex flex-col gap-6">
+
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-medium text-gray-700">
+                        Nombre
+                    </label>
+
+                    <input type="text"
+                           id="columnaNombre"
+                           name="Nombre"
+                           class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none" />
+                </div>
+
+                <div class="flex flex-col gap-2">
+                    <label class="text-sm font-medium text-gray-700">
+                        Descripción
+                    </label>
+
+                    <textarea id="columnaDescripcion"
+                              name="Descripcion"
+                              rows="4"
+                              class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none resize-none"></textarea>
+                </div>
+
+            </div>
+
+            <div class="p-8 border-t flex justify-end gap-4 bg-gray-50">
+                <button type="button"
+                        onclick="closeModalColumna()"
+                        class="px-5 py-3 border rounded-lg hover:bg-gray-100 transition">
+                    Cancelar
+                </button>
+
+                <button type="submit"
+                        class="px-5 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition">
+                    Editar
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+<script>
+        function abrirModalColumna(btn) {
+        document.getElementById('modalColumna').classList.remove('hidden');
+
+        document.getElementById('columnaId').value = btn.dataset.id;
+        document.getElementById('columnaNombre').value = btn.dataset.nombre;
+        document.getElementById('columnaDescripcion').value = btn.dataset.descripcion ?? "";
+        document.getElementById('columnaTableroId').value = btn.getAttribute('data-tableroid');
+    }
+
+    function closeModalColumna() {
+        document.getElementById('modalColumna').classList.add('hidden');
+    }
+</script>

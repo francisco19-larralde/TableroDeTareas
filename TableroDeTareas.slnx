@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="Data/Data.csproj" />
+  <Project Path="DTOS/DTOS.csproj" />
+  <Project Path="Model/Model.csproj" />
+  <Project Path="Proyecto1/AA-Proyecto Tareas.csproj" />
+  <Project Path="Servicio/Servicio.csproj" />
+  <Project Path="TestTablero/TestTablero.csproj" Id="b812d7a9-1f6c-4be5-9eab-89a350c81215" />
+</Solution>

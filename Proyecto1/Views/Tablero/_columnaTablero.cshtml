@@ -1,0 +1,106 @@
+﻿@using DTOS.Columna
+@model ColumnaViewModel
+
+
+<div id="tablero" class="flex space-x-4">
+
+    
+    <div class="columna draggable-columna w-72 flex-shrink-0 bg-white rounded-xl shadow-sm border border-slate-200"
+         data-id="@Model.Id">
+
+        
+        <div class="header-columna p-3 border-b border-slate-200 flex items-center justify-between cursor-pointer">
+            <div>
+                <h2 class="font-semibold text-slate-700">@Model.Nombre</h2>
+                <p class="text-slate-600 mt-1">@Model.Descripcion</p>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <div x-data="{ open: false }" class="relative">
+                    <button x-on:click="open = !open" class="px-2 py-1 text-slate-500">⋮</button>
+                    <div x-show="open" x-cloak x-on:click.outside="open = false" class="absolute right-0 mt-1 w-32 bg-white border rounded-md shadow-lg z-10">
+                        <button class="block w-full text-left px-4 py-2 text-sm hover:bg-slate-100"
+                                data-id=@Model.Id
+                                data-nombre="@Model.Nombre"
+                                data-descripcion="@Model.Descripcion"
+                                data-tableroid="@Model.IdTablero"
+                                onclick="abrirModalColumna(this)">
+                            Editar
+                        </button>
+                        <form asp-controller="Columna" asp-action="Eliminar" method="post">
+                            <input type="hidden" name="Id" value="@Model.Id" />
+                            <input type="hidden" name="IdTablero" value="@Model.IdTablero" />
+                            <button class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-slate-100">
+                                Borrar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="p-3 space-y-2 min-h-[100px] tareas-container"
+             data-columnaid="@Model.Id">
+
+            @if (Model.Tareas != null && Model.Tareas.Any())
+            {
+                @foreach (var tarea in Model.Tareas)
+                {
+                    <div class="tarea bg-white border border-slate-200 rounded-lg p-3 shadow-sm hover:shadow transition flex items-center justify-between"
+                         data-id="@tarea.id"
+                         data-columnaId="@Model.Id">
+                        <div class="flex items-center gap-3">
+                            <button type="button"
+                                    onclick="cambiarEstado(@tarea.id, @Model.Id, this)"
+                                    class="w-5 h-5 rounded-full border-2 transition @(tarea.Completada ? "bg-green-500 border-green-500" : "bg-transparent border-slate-300")">
+                            </button>
+                            <p class="text-sm text-slate-700">@tarea.Nombre</p>
+                        </div>
+                        <div x-data="{ open: false }" class="relative">
+                            <button x-on:click="open = !open" class="px-2 py-1 text-slate-500">⋮</button>
+                            <div x-show="open" x-cloak x-on:click.outside="open = false" class="absolute right-0 mt-1 w-32 bg-white border rounded-md shadow-lg z-10">
+                                <button class="block w-full text-left px-4 py-2 text-sm hover:bg-slate-100"
+                                        data-id=@tarea.id
+                                        data-nombre="@tarea.Nombre"
+                                        data-descripcion="@tarea.Descripcion"
+                                        data-tableroid="@Model.IdTablero"
+                                        onclick="abrirModalTarea(this)">
+                                    Editar
+                                </button>
+                                <form asp-controller="Tarea" asp-action="Eliminar" method="post">
+                                    <input type="hidden" name="tareaId" value="@tarea.id" />
+                                    <input type="hidden" name="tableroId" value="@Model.IdTablero" />
+                                    <button class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-slate-100">
+                                        Borrar
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="text-sm text-slate-400">Sin tarjetas</div>
+            }
+        </div>
+
+       
+        <form asp-controller="Tarea" asp-action="Agregar" method="POST" class="relative">
+            <input type="hidden" name="columnaId" value="@Model.Id" />
+            <input type="hidden" name="tableroId" value="@Model.IdTablero" />
+
+            
+            <div class="contenedor-input"></div>
+
+            <div class="p-3 border-t border-slate-200">
+                <button type="button" class="text-sm text-indigo-600 hover:text-indigo-800" onclick="mostrarInput(this)">
+                    + Añadir tarjeta
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+@await Html.PartialAsync("_editarTareaModal")
+@await Html.PartialAsync("_editarColumnaModal")

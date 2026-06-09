@@ -1,0 +1,120 @@
+﻿@using DTOS.Tablero
+@model DetalleTableroViewModel
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<div class="bg-slate-100 p-6">
+
+    <!-- Header tablero -->
+    <div class="mb-6 flex items-center justify-between">
+
+        <!-- Volver + Título -->
+        <div class="flex items-center gap-4">
+
+            <!-- Botón volver -->
+            <a asp-action="Index"
+               class="flex items-center justify-center w-10 h-10 rounded-lg border border-slate-300 text-slate-500 hover:text-indigo-600 hover:border-indigo-300 hover:bg-slate-50 transition"
+               title="Volver">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     class="h-5 w-5"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke="currentColor"
+                     stroke-width="2">
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M15.75 19.5L8.25 12l7.5-7.5" />
+                </svg>
+            </a>
+
+            <!-- Título y descripción -->
+            <div>
+                <h1 class="text-3xl font-bold text-slate-800">
+                    @Model.Titulo
+                </h1>
+
+                <p class="text-slate-600 mt-1">
+                    @Model.Descripcion
+                </p>
+            </div>
+
+        </div>
+
+        <!-- Iconos de acción -->
+        <div class="flex gap-3">
+
+            <!-- Editar -->
+            <button type="button"
+                    class="text-slate-500 hover:text-indigo-600 transition"
+                    title="Editar"
+                    onclick="openModal()">
+                <!-- Heroicon: Pencil -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M11 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-5m-5-5l5-5m-5 5L6 18" />
+                </svg>
+            </button>
+
+            <!-- Eliminar -->
+            <form asp-controller="Tablero" asp-action="Borrar" method="post">
+            <input type="hidden" name="id" value="@Model.Id" />
+            <button type="submit"
+                    class="text-red-500 hover:text-red-700 transition"
+                    onclick="return confirm('¿Estás seguro de que deseas eliminar este tablero? Esta acción no se puede deshacer?');"
+                    title="Eliminar">
+                <!-- Heroicon: Trash -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
+                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3" />
+                </svg>
+            </button>
+            </form>
+
+        </div>
+    </div>
+
+    <!-- Contenedor columnas -->
+    <div class="flex items-start gap-4 overflow-x-auto pb-4"
+         id="columnasContainer">
+
+        @foreach (var columna in Model.Columnas)
+        {
+            @await Html.PartialAsync("_columnaTablero", columna)
+        }
+
+        <!-- Botón nueva columna -->
+        <div class="w-72 flex-shrink-0">
+            <form asp-controller="Columna" asp-action="Agregar" method="post"
+                  class="bg-white border border-dashed border-slate-300 rounded-xl p-3 hover:border-indigo-500 transition">
+
+                <input type="hidden" name="tableroId" value="@Model.Id" />
+
+                <input type="text" name="Nombre"
+                       class="w-full border rounded-lg px-2 py-1 text-sm mb-2 focus:ring-2 focus:ring-indigo-500 outline-none"
+                       placeholder="Nueva columna" />
+
+                <button class="w-full bg-indigo-600 text-white text-sm py-1.5 rounded-lg hover:bg-indigo-700">
+                    + Columna
+                </button>
+
+            </form>
+        </div>
+
+    </div>
+
+</div>
+
+@await Html.PartialAsync("_editarTableroModal", Model)
+@await Html.PartialAsync("_editarColumnaModal")
+
+@section Scripts {
+    <script src="~/js/detalleTablero.js"></script>
+    <script>
+        const TABLERO_ID = @Model.Id;
+    </script>
+    <script src="~/js/dragAndDropColumnasTareas.js"></script>
+}

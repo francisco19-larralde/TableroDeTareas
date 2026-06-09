@@ -1,0 +1,67 @@
+﻿@using DTOS
+@using DTOS.Tablero
+@model List<TableroViewModel>
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="bg-slate-100">
+
+    <!-- Header -->
+    <header class="bg-white border-b">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+
+            <h1 class="text-2xl font-bold text-slate-800">
+                Mis Tableros
+            </h1>
+
+            <button onclick="openModal()"
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition">
+
+                Nuevo tablero
+
+            </button>
+
+        </div>
+    </header>
+
+    <!-- Dashboard -->
+    <main class="max-w-7xl mx-auto px-6 py-8">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
+
+            @foreach (var tablero in Model)
+            {
+                <div class="bg-white rounded-xl border-2 border-gray-200 shadow-sm p-6 transition-all hover:border-indigo-500 hover:shadow-lg">
+                    <a asp-action="Detalle" asp-route-id="@tablero.Id" class="block w-full h-full">
+                        <h2 class="font-semibold text-lg text-slate-800 hover:text-indigo-500 transition-colors">
+                            @tablero.Titulo
+                        </h2>
+                    </a>
+                </div>
+            }
+
+            <!-- Tarjeta crear -->
+            <button onclick="openModal()">
+
+                <div class="bg-white rounded-xl border-2 border-dashed border-slate-300 h-full
+                    flex items-center justify-center
+                    hover:border-indigo-500 hover:text-indigo-500
+                    transition">
+
+                    + Crear tablero
+
+                </div>
+
+            </button>
+
+        </div>
+
+    </main>
+
+</div>
+
+@await Html.PartialAsync("_crearTableroModal", new TableroViewModel())
+

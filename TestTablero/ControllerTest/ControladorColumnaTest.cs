@@ -55,7 +55,7 @@ namespace TestTablero.ControllerTest
 
             var columna = new CrearColumnaViewModel
             {
-                nombre = "", 
+                nombre = "",
                 tableroId = 1
             };
 
@@ -74,7 +74,7 @@ namespace TestTablero.ControllerTest
         [Fact]
         public void CuandoFallaServicioPorException_RedireccionaAVistaError()
         {
-            
+
             var columna = new CrearColumnaViewModel
             {
                 nombre = "Columna 1",
@@ -92,7 +92,138 @@ namespace TestTablero.ControllerTest
             Assert.Equal("Error", resultado.ControllerName);
         }
 
+        [Fact]
+        public void QueSePuedaEditarUnaColumna()
+        {
+            _controlador.ModelState.Clear();
+            var columna = new ColumnaViewModel
+            {
+                Id = 1,
+                Nombre = "Columna Editada",
+                IdTablero = 1
+            };
+            var resultado = _controlador.Editar(columna) as RedirectToActionResult;
+            Assert.NotNull(resultado);
+            Assert.Equal("Detalle", resultado.ActionName);
+            Assert.Equal("Tablero", resultado.ControllerName);
+            _servicioColumna.Verify(s => s.EditarColumna(It.Is<ColumnaViewModel>(
+                c => c.Id == 1 && c.Nombre == "Columna Editada" && c.IdTablero == 1
+            )), Times.Once);
 
+        }
 
+        [Fact]
+        public void QueSiModelStateEsInvalidoNoSeEditeLaColumna()
+        {
+            _controlador.ModelState.Clear();
+            _controlador.ModelState.AddModelError("Nombre", "El nombre es obligatorio");
+            var columna = new ColumnaViewModel
+            {
+                Id = 1,
+                Nombre = "",
+                IdTablero = 1
+            };
+            var resultado = _controlador.Editar(columna) as RedirectToActionResult;
+            Assert.NotNull(resultado);
+            Assert.Equal("Detalle", resultado.ActionName);
+            Assert.Equal("Tablero", resultado.ControllerName);
+            _servicioColumna.Verify(
+                s => s.EditarColumna(It.IsAny<ColumnaViewModel>()),
+                Times.Never
+            );
+
+        }
+
+        [Fact]
+        public void CuandoFallaServicioPorExceptionAlEditar_RedireccionaAVistaError()
+        {
+            var columna = new ColumnaViewModel
+            {
+                Id = 1,
+                Nombre = "Columna Editada",
+                IdTablero = 1
+            };
+            _servicioColumna
+                .Setup(s => s.EditarColumna(It.IsAny<ColumnaViewModel>()))
+                .Throws(new Exception("Error simulado"));
+            var resultado = _controlador.Editar(columna) as RedirectToActionResult;
+            Assert.NotNull(resultado);
+            Assert.Equal("Error", resultado.ActionName);
+            Assert.Equal("Error", resultado.ControllerName);
+        }
+
+        [Fact]
+        public void QueSePuedaEliminarUnaColumna()
+        {
+            var columna = new ColumnaViewModel
+            {
+                Id = 1,
+                Nombre = "Columna Editada",
+                IdTablero = 1
+            };
+            var resultado = _controlador.Eliminar(columna) as RedirectToActionResult;
+            Assert.NotNull(resultado);
+            Assert.Equal("Detalle", resultado.ActionName);
+            Assert.Equal("Tablero", resultado.ControllerName);
+            _servicioColumna.Verify(s => s.EliminarColumna(1), Times.Once);
+        }
+
+        [Fact]
+        public void CuandoFallaServicioPorExceptionAlEliminar_RedireccionaAVistaError()
+        {
+            var columna = new ColumnaViewModel
+            {
+                Id = 1,
+                Nombre = "Columna Editada",
+                IdTablero = 1
+            };
+            _servicioColumna
+                .Setup(s => s.EliminarColumna(1))
+                .Throws(new Exception("Error simulado"));
+            var resultado = _controlador.Eliminar(columna) as RedirectToActionResult;
+            Assert.NotNull(resultado);
+            Assert.Equal("Error", resultado.ActionName);
+            Assert.Equal("Error", resultado.ControllerName);
+        }
+
+        [Fact]
+        public void QueSePuedaReordenarUnaColumna()
+        {
+            var columna = new ReordenarColumna
+            {
+                TableroId = 1,
+                Ids = new List<int> { 3, 1, 2 }
+
+            };
+            var resultado = _controlador.Reordenar(columna);
+
+            Assert.IsType<OkResult>(resultado);
+
+            _servicioColumna.Verify(
+                s => s.ReordenarColumna(columna),
+                Times.Once);
+        }
+
+        [Fact]
+        public void CuandoFallaServicioPorExceptionAlReordenar_DevuelveBadRequest()
+        {
+            var columna = new ReordenarColumna
+            {
+                TableroId = 1,
+                Ids = new List<int> { 3, 1, 2 }
+            };
+            _servicioColumna
+                .Setup(s => s.ReordenarColumna(columna))
+                .Throws(new Exception("Error simulado"));
+            var resultado = _controlador.Reordenar(columna);
+
+            var badRequest = Assert.IsType<BadRequestObjectResult>(resultado);
+            Assert.Equal("Error simulado", badRequest.Value);
+
+            _servicioColumna.Verify(
+                s => s.ReordenarColumna(columna),
+                Times.Once);
+
+        }
     }
 }

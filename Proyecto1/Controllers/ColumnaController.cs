@@ -49,9 +49,10 @@ namespace Proyecto1.Controllers
                 _columnaServicio.EditarColumna(columnaViewModel);
                 return RedirectToAction("Detalle", "Tablero", new { id = columnaViewModel.IdTablero });
             }
-            catch
+            catch(Exception ex)
             {
-                return RedirectToAction("Detalle", "Tablero", new { id = columnaViewModel.IdTablero });
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Error", "Error");
             }
         }
 
@@ -64,9 +65,10 @@ namespace Proyecto1.Controllers
                 _columnaServicio.EliminarColumna(columnaViewModel.Id);
                 return RedirectToAction("Detalle", "Tablero", new { id = columnaViewModel.IdTablero });
             }
-            catch
+            catch (Exception ex)
             {
-                return RedirectToAction("Detalle", "Tablero", new { id = columnaViewModel.IdTablero });
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Error", "Error");
             }
         }
 
